@@ -34,6 +34,15 @@ public class ProductService {
 	}
 
 	public void createProduct(ProductDTO product) {
+		System.out.println(product);
+		if(product.getCode() == null || product.getName() == null || product.getCategory() == null) {
+			throw new ProductException("One of the product attributes is null.");
+		}
+		
+		Optional<ProductEntity> existing = repo.findById(product.getCode());
+		if(existing.isPresent()) {
+			throw new ProductException("Product with code " + product.getCode() + " already exists.");
+		}
 		repo.save(toEntity(product));
 	}
 
